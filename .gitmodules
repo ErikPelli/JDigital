@@ -1,0 +1,4 @@
+[submodule "frontend/dashboard-frontend"]
+	path = frontend/dashboard-frontend
+	url = https://github.com/ErikPelli/IpDigital.git
+	branch = dashboard-frontend
