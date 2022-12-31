@@ -1,0 +1,46 @@
+version: "3.8"
+
+networks:
+  database_network: {}
+  backend_network: {}
+
+services:
+  db:
+    image: mysql:8.0.31
+    container_name: ${MYSQL_HOST}
+    hostname: ${MYSQL_HOST}
+    restart: always
+    networks:
+      - database_network
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_ROOT_PASSWORD: temp-password
+      MYSQL_ONETIME_PASSWORD: yes
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+  api:
+    build: .
+    hostname: localhost
+    networks:
+      - database_network
+      - backend_network
+    ports:
+      - 8080:${API_PORT}
+    environment:
+      - API_PORT
+      - MYSQL_HOST
+      - MYSQL_DB
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    networks:
+      - backend_network
+    ports:
+      - ${APP_PORT}:80
+    depends_on:
+      - api
