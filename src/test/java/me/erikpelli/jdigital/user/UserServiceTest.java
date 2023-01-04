@@ -2,31 +2,47 @@ package me.erikpelli.jdigital.user;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@AutoConfigureTestDatabase
 class UserServiceTest {
-    @Autowired
+    @Mock
     private UserRepository userRepository;
 
-    @Autowired
     private UserService userService;
 
     @BeforeEach
     void setUp() {
-        var users = List.of(
+        MockitoAnnotations.openMocks(this);
+        userService = new UserService(userRepository);
+        var users = new ArrayList<>(List.of(
                 new User("AA", "1@gmail.com", "12345678"),
                 new User("BB", "2@gmail.com", "aaaaaaaa"),
                 new User("CC", "3@gmail.com", "bbbbbbbb")
-        );
-        userRepository.saveAll(users);
+        ));
+        Mockito.when(userRepository.save(Mockito.any(User.class)))
+                .thenAnswer((InvocationOnMock invocationOnMock) -> {
+                    User toSave = invocationOnMock.getArgument(0);
+                    users.add(toSave);
+                    return toSave;
+                });
+        Mockito.when(userRepository.findFirstByEmail(Mockito.anyString()))
+                .thenAnswer((InvocationOnMock invocationOnMock) -> {
+                    String email = invocationOnMock.getArgument(0);
+                    for (var user : users) {
+                        if (user.getEmail().equals(email)) {
+                            return user;
+                        }
+                    }
+                    return null;
+                });
     }
 
     @Test
@@ -52,6 +68,10 @@ class UserServiceTest {
 
     @Test
     void saveNewUser() {
+        assertThrows(Exception.class, () -> userService.saveNewUser(
+                new User("1", "1@1.com", "1234", "John", "Doe"))
+        );
+
         var user = new User();
         assertThrows(Exception.class, () -> userService.saveNewUser(user));
         user.setEmail("1@1.com");
@@ -60,8 +80,8 @@ class UserServiceTest {
         user.setName("John", "Doe");
         assertThrows(Exception.class, () -> userService.saveNewUser(user));
         user.setFiscalCode("1234567890123456");
-        assertDoesNotThrow(() -> userService.saveNewUser(user));
 
-        assertThrows(Exception.class, () -> userService.saveNewUser(new User("1", "1@1.com", "1234", "John", "Doe")));
+        assertDoesNotThrow(() -> userService.saveNewUser(user));
+        assertDoesNotThrow(() -> userService.getByEmail("1@1.com"));
     }
 }
