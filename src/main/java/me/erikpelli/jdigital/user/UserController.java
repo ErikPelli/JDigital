@@ -36,7 +36,7 @@ public class UserController {
      * @return exists
      */
     @PostMapping("/user")
-    public Map<String, Boolean> checkLoginData(
+    public Map<String, Object> checkLoginData(
             @RequestBody(required = false)
             Map<String, String> loginData) {
         var email = loginData.get("email");

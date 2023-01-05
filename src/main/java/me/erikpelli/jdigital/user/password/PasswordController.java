@@ -24,7 +24,7 @@ public class PasswordController {
      * @return isSet
      */
     @GetMapping("/password")
-    public Map<String, Boolean> checkIfPasswordIsSet(
+    public Map<String, Object> checkIfPasswordIsSet(
             @RequestBody(required = false)
             @JsonView(UserViews.UserEmail.class)
             User userData) {
