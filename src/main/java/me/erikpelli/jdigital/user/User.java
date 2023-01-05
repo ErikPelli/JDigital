@@ -51,7 +51,7 @@ public class User {
     public User(String fiscalCode, String email, String password) {
         this.fiscalCode = fiscalCode;
         this.email = email;
-        this.password = passwordEncoder.encode(password);
+        setPassword(password);
     }
 
     public User(String fiscalCode, String email, String password, String firstName, String lastName) {
