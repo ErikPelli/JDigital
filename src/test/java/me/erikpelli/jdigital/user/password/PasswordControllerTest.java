@@ -37,8 +37,11 @@ class PasswordControllerTest {
                 "3@gmail.com", new User("91011", "3@gmail.com", null)
         );
 
-        Mockito.when(passwordService.isPasswordSet(Mockito.anyString())).thenAnswer((InvocationOnMock invocationOnMock) -> {
+        Mockito.when(passwordService.isPasswordSet(Mockito.nullable(String.class))).thenAnswer((InvocationOnMock invocationOnMock) -> {
             String email = invocationOnMock.getArgument(0);
+            if (email == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
+            }
             var user = users.get(email);
             if (user == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
@@ -53,6 +56,10 @@ class PasswordControllerTest {
                 .get("/password")
                 .contentType(MediaType.APPLICATION_JSON);
 
+        mockMvc.perform(userInformationRequest.content("{}"))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+        mockMvc.perform(userInformationRequest.content("{\"email\": null}"))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
         mockMvc.perform(userInformationRequest.content("{\"email\": \"fakeEmail@gmail.com\"}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
@@ -81,18 +88,25 @@ class PasswordControllerTest {
         Mockito.doAnswer((InvocationOnMock invocationOnMock) -> {
             String email = invocationOnMock.getArgument(0);
             String password = invocationOnMock.getArgument(1);
+            if (email == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
+            }
             var user = users.get(email);
             if (user == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
             }
             user.setPassword(password);
             return null;
-        }).when(passwordService).replaceOldPassword(Mockito.anyString(), Mockito.anyString());
+        }).when(passwordService).replaceOldPassword(Mockito.nullable(String.class), Mockito.nullable(String.class));
 
         var userInformationRequest = MockMvcRequestBuilders
                 .post("/password")
                 .contentType(MediaType.APPLICATION_JSON);
 
+        mockMvc.perform(userInformationRequest.content("{}"))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+        mockMvc.perform(userInformationRequest.content("{\"email\": null}"))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
         mockMvc.perform(userInformationRequest.content("{\"email\": \"fakeEmail@gmail.com\"}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
@@ -114,18 +128,25 @@ class PasswordControllerTest {
     void deleteCurrentPassword() throws Exception {
         Mockito.doAnswer((InvocationOnMock invocationOnMock) -> {
             String email = invocationOnMock.getArgument(0);
+            if (email == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
+            }
             var user = users.get(email);
             if (user == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "");
             }
             user.setPassword(null);
             return null;
-        }).when(passwordService).deletePassword(Mockito.anyString());
+        }).when(passwordService).deletePassword(Mockito.nullable(String.class));
 
         var userInformationRequest = MockMvcRequestBuilders
                 .delete("/password")
                 .contentType(MediaType.APPLICATION_JSON);
 
+        mockMvc.perform(userInformationRequest.content("{}"))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+        mockMvc.perform(userInformationRequest.content("{\"email\": null}"))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
         mockMvc.perform(userInformationRequest.content("{\"email\": \"fakeEmail@gmail.com\"}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
