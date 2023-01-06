@@ -48,6 +48,9 @@ public class User {
     public User() {
     }
 
+    /**
+     * Constructor that leaves firstName and lastName as null values.
+     */
     public User(String fiscalCode, String email, String password) {
         this.fiscalCode = fiscalCode;
         this.email = email;

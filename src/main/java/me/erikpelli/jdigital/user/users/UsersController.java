@@ -6,7 +6,6 @@ import me.erikpelli.jdigital.user.UserViews;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -26,15 +25,12 @@ public class UsersController {
     @JsonView(UserViews.UserEmail.class)
     public List<User> getEmailsOfAllTheUsers() {
         var listOfEmails = usersService.getAllEmails();
-        var newList = new ArrayList<User>(listOfEmails.size());
 
         // Convert list of email to list of objects
-        for (String email : listOfEmails) {
+        return listOfEmails.stream().map((String email) -> {
             var newUser = new User();
             newUser.setEmail(email);
-            newList.add(newUser);
-        }
-
-        return newList;
+            return newUser;
+        }).toList();
     }
 }
