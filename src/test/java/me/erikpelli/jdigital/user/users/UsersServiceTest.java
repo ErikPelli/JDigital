@@ -14,14 +14,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UsersServiceTest {
     @Mock
-    private UserRepository userRepository;
+    private UsersRepository usersRepository;
 
     private UsersService usersService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        usersService = new UsersService(userRepository);
+        usersService = new UsersService(usersRepository);
     }
 
     @Test
@@ -30,7 +30,7 @@ class UsersServiceTest {
                 "1@gmail.com", "2@gmail.com", "3@gmail.com",
                 "4@gmail.com", "5@gmail.com", "6@gmail.com"
         );
-        Mockito.when(userRepository.getAllEmails()).thenReturn(emails);
+        Mockito.when(usersRepository.getAllEmails()).thenReturn(emails);
 
         var result = usersService.getAllEmails();
         assertEquals(Set.of(emails), Set.of(result));
