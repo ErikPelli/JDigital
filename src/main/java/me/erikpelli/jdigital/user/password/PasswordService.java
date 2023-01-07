@@ -1,17 +1,15 @@
 package me.erikpelli.jdigital.user.password;
 
-import me.erikpelli.jdigital.user.UserRepository;
-import me.erikpelli.jdigital.user.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class PasswordService {
-    private final UserRepository userRepository;
-    private final UserService userService;
+    private final PasswordRepository passwordRepository;
 
-    public PasswordService(UserRepository userRepository, UserService userService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
+    public PasswordService(PasswordRepository passwordRepository) {
+        this.passwordRepository = passwordRepository;
     }
 
     /**
@@ -21,7 +19,13 @@ public class PasswordService {
      * @return boolean result
      */
     public boolean isPasswordSet(String email) {
-        var user = userService.getByEmail(email);
+        if (email == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email is mandatory");
+        }
+        var user = passwordRepository.findFirstByEmail(email);;
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found");
+        }
         return user.hasPassword();
     }
 
@@ -32,9 +36,15 @@ public class PasswordService {
      * @param password new password
      */
     public void replaceOldPassword(String email, String password) {
-        var user = userService.getByEmail(email);
+        if (email == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email is mandatory");
+        }
+        var user = passwordRepository.findFirstByEmail(email);;
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found");
+        }
         user.setPassword(password);
-        userRepository.save(user);
+        passwordRepository.save(user);
     }
 
     /**
