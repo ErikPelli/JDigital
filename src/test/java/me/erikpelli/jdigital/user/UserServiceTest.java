@@ -1,5 +1,6 @@
 package me.erikpelli.jdigital.user;
 
+import me.erikpelli.jdigital.user.settings.UserSettingsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -16,12 +17,16 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private UserSettingsService userSettingsService;
+
     private UserService userService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         userService = new UserService(userRepository);
+        userService.setUserSettingsService(userSettingsService);
         var users = new ArrayList<>(List.of(
                 new User("AA", "1@gmail.com", "12345678"),
                 new User("BB", "2@gmail.com", "aaaaaaaa"),
@@ -82,6 +87,7 @@ class UserServiceTest {
         user.setFiscalCode("1234567890123456");
 
         assertDoesNotThrow(() -> userService.saveNewUser(user));
+        Mockito.verify(userSettingsService, Mockito.times(1)).resetSettings(Mockito.anyString());
         assertDoesNotThrow(() -> userService.getByEmail("1@1.com"));
     }
 }

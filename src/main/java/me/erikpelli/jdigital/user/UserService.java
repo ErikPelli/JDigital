@@ -1,5 +1,7 @@
 package me.erikpelli.jdigital.user;
 
+import me.erikpelli.jdigital.user.settings.UserSettingsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -8,8 +10,15 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserService {
     private final UserRepository userRepository;
 
+    private UserSettingsService userSettingsService;
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setUserSettingsService(UserSettingsService userSettingsService) {
+        this.userSettingsService = userSettingsService;
     }
 
     /**
@@ -80,5 +89,6 @@ public class UserService {
             );
         }
         userRepository.save(user);
+        userSettingsService.resetSettings(user.getEmail());
     }
 }
