@@ -1,12 +1,10 @@
 package me.erikpelli.jdigital.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import me.erikpelli.jdigital.user.settings.UserSettings;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -45,6 +43,9 @@ public class User {
     @JsonView(UserViews.UserDetail.class)
     private String lastName;
 
+    @Embedded
+    private UserSettings settings;
+
     public User() {
     }
 
@@ -72,6 +73,14 @@ public class User {
      */
     public void setPassword(String password) {
         this.password = (password == null) ? null : passwordEncoder.encode(password);
+    }
+
+    public UserSettings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(UserSettings settings) {
+        this.settings = settings;
     }
 
     public void setFiscalCode(String fiscalCode) {
