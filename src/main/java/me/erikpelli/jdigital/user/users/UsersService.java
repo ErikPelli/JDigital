@@ -7,10 +7,10 @@ import java.util.List;
 
 @Service
 public class UsersService {
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
 
-    public UsersService(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
+    public UsersService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     /**
@@ -19,6 +19,6 @@ public class UsersService {
      * @return List of email
      */
     public List<String> getAllEmails() {
-        return usersRepository.getAllEmails();
+        return userRepository.getAllEmails();
     }
 }
