@@ -1,6 +1,7 @@
 package me.erikpelli.jdigital.user.password;
 
 import me.erikpelli.jdigital.user.User;
+import me.erikpelli.jdigital.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -16,26 +17,26 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PasswordServiceTest {
     @Mock
-    private PasswordRepository passwordRepository;
+    private UserRepository userRepository;
 
     private PasswordService passwordService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        passwordService = new PasswordService(passwordRepository);
+        passwordService = new PasswordService(userRepository);
         var users = new ArrayList<>(List.of(
                 new User("AA", "1@gmail.com", "12345678"),
                 new User("BB", "2@gmail.com", "aaaaaaaa"),
                 new User("CC", "3@gmail.com", null)
         ));
-        Mockito.when(passwordRepository.save(Mockito.any(User.class)))
+        Mockito.when(userRepository.save(Mockito.any(User.class)))
                 .thenAnswer((InvocationOnMock invocationOnMock) -> {
                     User toSave = invocationOnMock.getArgument(0);
                     users.add(toSave);
                     return toSave;
                 });
-        Mockito.when(passwordRepository.findFirstByEmail(Mockito.anyString()))
+        Mockito.when(userRepository.findFirstByEmail(Mockito.anyString()))
                 .thenAnswer((InvocationOnMock invocationOnMock) -> {
                     String email = invocationOnMock.getArgument(0);
                     for (var user : users) {
@@ -63,8 +64,8 @@ class PasswordServiceTest {
         assertDoesNotThrow(() -> passwordService.replaceOldPassword("1@gmail.com", ""));
         assertDoesNotThrow(() -> passwordService.replaceOldPassword("1@gmail.com", "password1"));
         assertDoesNotThrow(() -> passwordService.replaceOldPassword("3@gmail.com", "password2"));
-        assertTrue(Objects.requireNonNull(passwordRepository.findFirstByEmail("1@gmail.com")).passwordMatches("password1"));
-        assertTrue(Objects.requireNonNull(passwordRepository.findFirstByEmail("3@gmail.com")).passwordMatches("password2"));
+        assertTrue(Objects.requireNonNull(userRepository.findFirstByEmail("1@gmail.com")).passwordMatches("password1"));
+        assertTrue(Objects.requireNonNull(userRepository.findFirstByEmail("3@gmail.com")).passwordMatches("password2"));
     }
 
     @Test

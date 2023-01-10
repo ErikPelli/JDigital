@@ -1,15 +1,16 @@
 package me.erikpelli.jdigital.user.password;
 
+import me.erikpelli.jdigital.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class PasswordService {
-    private final PasswordRepository passwordRepository;
+    private final UserRepository userRepository;
 
-    public PasswordService(PasswordRepository passwordRepository) {
-        this.passwordRepository = passwordRepository;
+    public PasswordService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     /**
@@ -22,7 +23,7 @@ public class PasswordService {
         if (email == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email is mandatory");
         }
-        var user = passwordRepository.findFirstByEmail(email);;
+        var user = userRepository.findFirstByEmail(email);
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found");
         }
@@ -39,12 +40,12 @@ public class PasswordService {
         if (email == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email is mandatory");
         }
-        var user = passwordRepository.findFirstByEmail(email);;
+        var user = userRepository.findFirstByEmail(email);
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found");
         }
         user.setPassword(password);
-        passwordRepository.save(user);
+        userRepository.save(user);
     }
 
     /**
