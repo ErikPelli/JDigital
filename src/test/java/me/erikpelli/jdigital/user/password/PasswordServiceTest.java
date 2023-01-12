@@ -2,6 +2,7 @@ package me.erikpelli.jdigital.user.password;
 
 import me.erikpelli.jdigital.user.User;
 import me.erikpelli.jdigital.user.UserRepository;
+import me.erikpelli.jdigital.user.settings.UserSettings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -26,9 +27,9 @@ class PasswordServiceTest {
         MockitoAnnotations.openMocks(this);
         passwordService = new PasswordService(userRepository);
         var users = new ArrayList<>(List.of(
-                new User("AA", "1@gmail.com", "12345678"),
-                new User("BB", "2@gmail.com", "aaaaaaaa"),
-                new User("CC", "3@gmail.com", null)
+                new User("AA", "1@gmail.com", "12345678", null),
+                new User("BB", "2@gmail.com", "aaaaaaaa", null),
+                new User("CC", "3@gmail.com", null, null)
         ));
         Mockito.when(userRepository.save(Mockito.any(User.class)))
                 .thenAnswer((InvocationOnMock invocationOnMock) -> {

@@ -32,9 +32,9 @@ class PasswordControllerTest {
     @BeforeEach
     void setUp() {
         users = Map.of(
-                "1@gmail.com", new User("1234", "1@gmail.com", "12345678"),
-                "2@gmail.com", new User("5678", "2@gmail.com", "aaaaaaaa", "John", "Doe"),
-                "3@gmail.com", new User("91011", "3@gmail.com", null)
+                "1@gmail.com", new User("1234", "1@gmail.com", "12345678", null),
+                "2@gmail.com", new User("5678", "2@gmail.com", "aaaaaaaa", null, "John", "Doe"),
+                "3@gmail.com", new User("91011", "3@gmail.com", null, null)
         );
 
         Mockito.when(passwordService.isPasswordSet(Mockito.nullable(String.class))).thenAnswer((InvocationOnMock invocationOnMock) -> {
