@@ -1,5 +1,6 @@
 package me.erikpelli.jdigital.user;
 
+import me.erikpelli.jdigital.user.settings.UserSettings;
 import me.erikpelli.jdigital.user.settings.UserSettingsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,15 +23,17 @@ class UserServiceTest {
 
     private UserService userService;
 
+    private final UserSettings emptySettings = new UserSettings(null, "", "");
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         userService = new UserService(userRepository);
         userService.setUserSettingsService(userSettingsService);
         var users = new ArrayList<>(List.of(
-                new User("AA", "1@gmail.com", "12345678"),
-                new User("BB", "2@gmail.com", "aaaaaaaa"),
-                new User("CC", "3@gmail.com", "bbbbbbbb")
+                new User("AA", "1@gmail.com", "12345678", emptySettings),
+                new User("BB", "2@gmail.com", "aaaaaaaa", emptySettings),
+                new User("CC", "3@gmail.com", "bbbbbbbb", emptySettings)
         ));
         Mockito.when(userRepository.save(Mockito.any(User.class)))
                 .thenAnswer((InvocationOnMock invocationOnMock) -> {
@@ -55,7 +58,7 @@ class UserServiceTest {
         assertThrows(Exception.class, () -> userService.getByEmail(null));
         assertThrows(Exception.class, () -> userService.getByEmail("fakeEmail@gmail.com"));
 
-        var userToFind = new User("AA", "1@gmail.com", "12345678");
+        var userToFind = new User("AA", "1@gmail.com", "12345678", emptySettings);
         assertEquals(userToFind, userService.getByEmail(userToFind.getEmail()));
     }
 
@@ -74,7 +77,7 @@ class UserServiceTest {
     @Test
     void saveNewUser() {
         assertThrows(Exception.class, () -> userService.saveNewUser(
-                new User("1", "1@1.com", "1234", "John", "Doe"))
+                new User("1", "1@1.com", "1234", emptySettings, "John", "Doe"))
         );
 
         var user = new User();
