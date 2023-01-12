@@ -29,6 +29,18 @@ public class UserSettingsService {
         this.companyRepository = companyRepository;
     }
 
+    protected void setDefaultJob(String defaultJob) {
+        this.defaultJob = defaultJob;
+    }
+
+    protected void setDefaultRole(String defaultRole) {
+        this.defaultRole = defaultRole;
+    }
+
+    protected void setDefaultCompany(String defaultCompany) {
+        this.defaultCompany = defaultCompany;
+    }
+
     /**
      * Get settings of a user from its email.
      *

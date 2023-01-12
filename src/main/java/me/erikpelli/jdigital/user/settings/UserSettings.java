@@ -34,6 +34,9 @@ public class UserSettings {
     }
 
     public String getEmployerCode() {
+        if (employer == null) {
+            return null;
+        }
         return employer.getVatNum();
     }
 
