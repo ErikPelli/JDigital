@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
+import java.util.Objects;
+
 @Entity
 public class Company {
     /**
@@ -55,5 +57,23 @@ public class Company {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Company company)) return false;
+
+        if (!Objects.equals(vatNum, company.vatNum)) return false;
+        if (!Objects.equals(name, company.name)) return false;
+        return Objects.equals(address, company.address);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = vatNum != null ? vatNum.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        return result;
     }
 }
