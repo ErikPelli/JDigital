@@ -98,17 +98,17 @@ class UserControllerTest {
 
     @Test
     void checkLoginData() throws Exception {
-        var userInformationRequest = MockMvcRequestBuilders
+        var checkLoginRequest = MockMvcRequestBuilders
                 .post("/user")
                 .contentType(MediaType.APPLICATION_JSON);
-        mockMvc.perform(userInformationRequest.content("{\"email\": null}"))
+        mockMvc.perform(checkLoginRequest.content("{\"email\": null}"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"fakeEmail@gmail.com\"}"))
+        mockMvc.perform(checkLoginRequest.content("{\"email\": \"fakeEmail@gmail.com\"}"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"fakeEmail@gmail.com\", \"password\": null}"))
+        mockMvc.perform(checkLoginRequest.content("{\"email\": \"fakeEmail@gmail.com\", \"password\": null}"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"fakeEmail@gmail.com\", \"password\": \"12345678\"}"))
+        mockMvc.perform(checkLoginRequest.content("{\"email\": \"fakeEmail@gmail.com\", \"password\": \"12345678\"}"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                 {
@@ -117,7 +117,7 @@ class UserControllerTest {
                         "exists": false
                     }
                 }""", true));
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"1@gmail.com\", \"password\": \"12345678\"}"))
+        mockMvc.perform(checkLoginRequest.content("{\"email\": \"1@gmail.com\", \"password\": \"12345678\"}"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                 {
@@ -126,7 +126,7 @@ class UserControllerTest {
                         "exists": true
                     }
                 }""", true));
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"1@gmail.com\", \"password\": \"87654321\"}"))
+        mockMvc.perform(checkLoginRequest.content("{\"email\": \"1@gmail.com\", \"password\": \"87654321\"}"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                 {
@@ -139,13 +139,13 @@ class UserControllerTest {
 
     @Test
     void registerUser() throws Exception {
-        var userInformationRequest = MockMvcRequestBuilders
+        var registerUserRequest = MockMvcRequestBuilders
                 .put("/user")
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"newEmail@gmail.com\", \"password\": \"12345678\"}"))
+        mockMvc.perform(registerUserRequest.content("{\"email\": \"newEmail@gmail.com\", \"password\": \"12345678\"}"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
-        mockMvc.perform(userInformationRequest.content("""
+        mockMvc.perform(registerUserRequest.content("""
                 {
                     "fiscalCode": "12345678",
                     "email": "new@gmail.com",
@@ -155,7 +155,7 @@ class UserControllerTest {
                 }"""))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
-        mockMvc.perform(userInformationRequest.content("""
+        mockMvc.perform(registerUserRequest.content("""
                 {
                     "fiscalCode": "1234567812345678",
                     "email": "new@gmail.com",

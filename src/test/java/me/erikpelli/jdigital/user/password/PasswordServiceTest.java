@@ -2,7 +2,6 @@ package me.erikpelli.jdigital.user.password;
 
 import me.erikpelli.jdigital.user.User;
 import me.erikpelli.jdigital.user.UserRepository;
-import me.erikpelli.jdigital.user.settings.UserSettings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

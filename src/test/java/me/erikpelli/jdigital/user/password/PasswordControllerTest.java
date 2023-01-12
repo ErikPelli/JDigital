@@ -52,18 +52,18 @@ class PasswordControllerTest {
 
     @Test
     void checkIfPasswordIsSet() throws Exception {
-        var userInformationRequest = MockMvcRequestBuilders
+        var checkPasswordRequest = MockMvcRequestBuilders
                 .get("/password")
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(userInformationRequest.content("{}"))
+        mockMvc.perform(checkPasswordRequest.content("{}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
-        mockMvc.perform(userInformationRequest.content("{\"email\": null}"))
+        mockMvc.perform(checkPasswordRequest.content("{\"email\": null}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"fakeEmail@gmail.com\"}"))
+        mockMvc.perform(checkPasswordRequest.content("{\"email\": \"fakeEmail@gmail.com\"}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"2@gmail.com\"}"))
+        mockMvc.perform(checkPasswordRequest.content("{\"email\": \"2@gmail.com\"}"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                 {
@@ -72,7 +72,7 @@ class PasswordControllerTest {
                         "isSet": true
                     }
                 }""", true));
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"3@gmail.com\"}"))
+        mockMvc.perform(checkPasswordRequest.content("{\"email\": \"3@gmail.com\"}"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                 {
@@ -99,23 +99,23 @@ class PasswordControllerTest {
             return null;
         }).when(passwordService).replaceOldPassword(Mockito.nullable(String.class), Mockito.nullable(String.class));
 
-        var userInformationRequest = MockMvcRequestBuilders
+        var replacePasswordRequest = MockMvcRequestBuilders
                 .post("/password")
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(userInformationRequest.content("{}"))
+        mockMvc.perform(replacePasswordRequest.content("{}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
-        mockMvc.perform(userInformationRequest.content("{\"email\": null}"))
+        mockMvc.perform(replacePasswordRequest.content("{\"email\": null}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"fakeEmail@gmail.com\"}"))
-                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
-
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"fakeEmail@gmail.com\", \"password\": \"1234\"}"))
+        mockMvc.perform(replacePasswordRequest.content("{\"email\": \"fakeEmail@gmail.com\"}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"2@gmail.com\", \"password\": null}"))
+        mockMvc.perform(replacePasswordRequest.content("{\"email\": \"fakeEmail@gmail.com\", \"password\": \"1234\"}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"3@gmail.com\", \"password\": \"1234\"}"))
+
+        mockMvc.perform(replacePasswordRequest.content("{\"email\": \"2@gmail.com\", \"password\": null}"))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+        mockMvc.perform(replacePasswordRequest.content("{\"email\": \"3@gmail.com\", \"password\": \"1234\"}"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                 {
@@ -139,25 +139,25 @@ class PasswordControllerTest {
             return null;
         }).when(passwordService).deletePassword(Mockito.nullable(String.class));
 
-        var userInformationRequest = MockMvcRequestBuilders
+        var deletePasswordRequest = MockMvcRequestBuilders
                 .delete("/password")
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(userInformationRequest.content("{}"))
+        mockMvc.perform(deletePasswordRequest.content("{}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
-        mockMvc.perform(userInformationRequest.content("{\"email\": null}"))
+        mockMvc.perform(deletePasswordRequest.content("{\"email\": null}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"fakeEmail@gmail.com\"}"))
+        mockMvc.perform(deletePasswordRequest.content("{\"email\": \"fakeEmail@gmail.com\"}"))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
 
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"2@gmail.com\"}"))
+        mockMvc.perform(deletePasswordRequest.content("{\"email\": \"2@gmail.com\"}"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                 {
                     "success": true,
                     "result": {}
                 }""", true));
-        mockMvc.perform(userInformationRequest.content("{\"email\": \"3@gmail.com\"}"))
+        mockMvc.perform(deletePasswordRequest.content("{\"email\": \"3@gmail.com\"}"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                 {
