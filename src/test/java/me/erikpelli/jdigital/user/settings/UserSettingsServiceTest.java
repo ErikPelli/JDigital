@@ -11,7 +11,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,16 +30,20 @@ class UserSettingsServiceTest {
         MockitoAnnotations.openMocks(this);
         userSettingsService = new UserSettingsService(userRepository, companyRepository);
 
-        var users = new HashMap<>(Map.of(
-                "1@gmail.com", new User("AA", "1@gmail.com", "12345678", new UserSettings(new Company("VAT1", "", ""), "1", "2")),
-                "2@gmail.com", new User("BB", "2@gmail.com", "aaaaaaaa", null),
-                "3@gmail.com", new User("CC", "3@gmail.com", null, null)
-        ));
+        var users = Map.of(
+                "1@gmail.com", new User("AAAAAAAAAAAAAAAA", "1@gmail.com", "12345678", new UserSettings(new Company("VAT1", "", ""), "1", "2")),
+                "2@gmail.com", new User("BBBBBBBBBBBBBBBB", "2@gmail.com", "aaaaaaaa", null),
+                "3@gmail.com", new User("CCCCCCCCCCCCCCCC", "3@gmail.com", null, null)
+        );
         Mockito.when(userRepository.save(Mockito.any(User.class)))
                 .thenAnswer((InvocationOnMock invocationOnMock) -> {
                     User toSave = invocationOnMock.getArgument(0);
-                    users.put(toSave.getEmail(), toSave);
-                    return toSave;
+                    var existentUser = users.get(toSave.getEmail());
+                    existentUser.setFiscalCode(toSave.getFiscalCode());
+                    existentUser.setEmail(toSave.getEmail());
+                    existentUser.setName(toSave.getFirstName(), toSave.getLastName());
+                    existentUser.setSettings(toSave.getSettings());
+                    return existentUser;
                 });
         Mockito.when(userRepository.findFirstByEmail(Mockito.anyString()))
                 .thenAnswer((InvocationOnMock invocationOnMock) -> {
