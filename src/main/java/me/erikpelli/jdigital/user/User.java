@@ -52,16 +52,18 @@ public class User {
     /**
      * Constructor that leaves firstName and lastName as null values.
      */
-    public User(String fiscalCode, String email, String password) {
+    public User(String fiscalCode, String email, String password, UserSettings settings) {
         this.fiscalCode = fiscalCode;
         this.email = email;
         setPassword(password);
+        this.settings = settings;
     }
 
-    public User(String fiscalCode, String email, String password, String firstName, String lastName) {
+    public User(String fiscalCode, String email, String password, UserSettings settings, String firstName, String lastName) {
         this.fiscalCode = fiscalCode;
         this.email = email;
         setPassword(password);
+        this.settings = settings;
         this.firstName = firstName;
         this.lastName = lastName;
     }
