@@ -1,5 +1,6 @@
 package me.erikpelli.jdigital.user;
 
+import me.erikpelli.jdigital.user.settings.UserSettingsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -23,6 +24,9 @@ class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    private UserSettingsService userSettingsService;
+
     @SpyBean
     private UserService userService;
 
@@ -32,9 +36,9 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         var users = new ArrayList<>(List.of(
-                new User("AA", "1@gmail.com", "12345678"),
-                new User("BB", "2@gmail.com", "aaaaaaaa", "John", "Doe"),
-                new User("CC", "3@gmail.com", "bbbbbbbb")
+                new User("AA", "1@gmail.com", "12345678", null),
+                new User("BB", "2@gmail.com", "aaaaaaaa", null, "John", "Doe"),
+                new User("CC", "3@gmail.com", "bbbbbbbb", null)
         ));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenAnswer((InvocationOnMock invocationOnMock) -> {
             User toSave = invocationOnMock.getArgument(0);

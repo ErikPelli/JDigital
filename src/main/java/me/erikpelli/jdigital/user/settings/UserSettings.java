@@ -9,7 +9,7 @@ public class UserSettings {
      * Employer of the current user.
      */
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
+    @JoinColumn
     private Company employer;
 
     /**
