@@ -32,9 +32,9 @@ public class UserSettingsController {
         var email = (userData != null) ? userData.getEmail() : null;
         var settings = userSettingsService.getByEmail(email);
         return Map.of(
-                "job", settings.getJob(),
-                "role", settings.getRole(),
-                "company", settings.getEmployerCode()
+                "job", Optional.ofNullable(settings.getJob()).orElse(""),
+                "role", Optional.ofNullable(settings.getRole()).orElse(""),
+                "company", Optional.ofNullable(settings.getEmployerCode()).orElse("")
         );
     }
 
