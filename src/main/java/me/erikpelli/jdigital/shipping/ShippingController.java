@@ -31,7 +31,7 @@ public class ShippingController {
     public List<Map<String, String>> getShippingLots(
             @RequestBody(required = false)
             ShippingDetailsInput optionParams) {
-        if (optionParams.limit() == null ||
+        if (optionParams == null || optionParams.limit() == null ||
                 (optionParams.limit() && (optionParams.resultsPerPage() == null || optionParams.pageNumber() == null))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid pagination parameters");
         }
