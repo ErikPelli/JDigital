@@ -23,7 +23,7 @@ public class ShippingService {
      *
      * @param getAllResults  if true, return all the results, else use the pagination
      * @param resultsPerPage number of entries for every page
-     * @param pageNumber     number of the page to retrieve
+     * @param pageNumber     number of the page to retrieve, 1 is the first
      * @return List of shipping lots
      */
     public List<ShippingLot> getLots(boolean getAllResults, Optional<Integer> resultsPerPage, Optional<Integer> pageNumber) {
@@ -32,7 +32,7 @@ public class ShippingService {
         }
 
         if (resultsPerPage.isPresent() && pageNumber.isPresent() && resultsPerPage.get() > 0 && pageNumber.get() > 0) {
-            var pagination = PageRequest.of(pageNumber.get(), resultsPerPage.get(), Sort.by("shippingDate").descending());
+            var pagination = PageRequest.of(pageNumber.get() - 1, resultsPerPage.get(), Sort.by("shippingDate").descending());
             return shippingRepository.findAll(pagination);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid pagination parameters");
