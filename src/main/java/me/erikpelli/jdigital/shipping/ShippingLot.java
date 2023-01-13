@@ -7,6 +7,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 public class ShippingLot {
@@ -26,7 +27,7 @@ public class ShippingLot {
      * Customer company that ordered the product.
      */
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
+    @JoinColumn
     private Company customer;
 
     private int productQuantity = 1;
@@ -97,6 +98,18 @@ public class ShippingLot {
 
     public void setCustomer(Company customer) {
         this.customer = customer;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ShippingLot that)) return false;
+        return shippingCode.equals(that.shippingCode) && Objects.equals(shippingDate, that.shippingDate) && Objects.equals(customer, that.customer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(shippingCode, shippingDate, customer);
     }
 }
 
