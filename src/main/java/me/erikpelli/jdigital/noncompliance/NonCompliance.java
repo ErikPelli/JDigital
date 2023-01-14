@@ -42,13 +42,13 @@ public class NonCompliance {
      * Entity that generated the problem.
      */
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private NonComplianceOrigin origin;
 
     /**
      * Optional comment written when the noncompliance is created to
      * better explain the problem.
      */
-    @Column(nullable = false)
     private String comment;
 
     /**
