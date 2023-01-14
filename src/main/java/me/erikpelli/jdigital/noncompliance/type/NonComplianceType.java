@@ -27,6 +27,12 @@ public class NonComplianceType {
     protected NonComplianceType() {
     }
 
+    public NonComplianceType(String name, String description) {
+        this.code = null;
+        this.name = name;
+        this.description = description;
+    }
+
     public NonComplianceType(Integer code, String name, String description) {
         this.code = code;
         this.name = name;
