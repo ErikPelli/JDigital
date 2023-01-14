@@ -3,10 +3,25 @@ package me.erikpelli.jdigital.noncompliance.state;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+/**
+ * Current noncompliance status identifier.
+ */
 public enum NonComplianceStatus {
+    /**
+     * Noncompliance created and not managed yet.
+     */
     NEW("new"),
+    /**
+     * An analysis of the causes and possible solutions is underway.
+     */
     ANALYSIS("analysys"),
+    /**
+     * A review of the previously performed analysis is underway.
+     */
     CHECK("check"),
+    /**
+     * Management ended and a result was produced.
+     */
     RESULT("result");
 
     private final String value;

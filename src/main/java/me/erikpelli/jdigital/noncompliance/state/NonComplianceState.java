@@ -7,9 +7,6 @@ import java.sql.Date;
 
 @Embeddable
 public class NonComplianceState {
-    /**
-     * Current status of the noncompliance.
-     */
     @Enumerated(EnumType.STRING)
     private NonComplianceStatus status;
 

@@ -2,9 +2,21 @@ package me.erikpelli.jdigital.noncompliance;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+/**
+ * Cause of the noncompliance creation.
+ */
 public enum NonComplianceOrigin {
+    /**
+     * Caused by an internal production process.
+     */
     INTERNAL("internal"),
+    /**
+     * Caused by a customer.
+     */
     CUSTOMER("customer"),
+    /**
+     * Caused by an input raw material lot.
+     */
     SUPPLIER("supplier");
 
     private final String value;
