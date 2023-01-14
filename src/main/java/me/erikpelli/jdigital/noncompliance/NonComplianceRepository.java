@@ -51,8 +51,7 @@ public interface NonComplianceRepository extends CrudRepository<NonCompliance, I
             select n.date as date, n.nonComplianceState.status as status, count(*) as counter
             from NonCompliance n
             where n.date > :oneMonthAgoDate and n.date <= :todayDate
-            group by n.date, n.nonComplianceState.status
-            order by n.date desc""")
+            group by n.date, n.nonComplianceState.status""")
     List<TotalStatsTypeWithDate> last30DaysStats_rows(@Param("oneMonthAgoDate") LocalDate oneMonthAgoDate,
                                                       @Param("todayDate") LocalDate todayDate);
 
