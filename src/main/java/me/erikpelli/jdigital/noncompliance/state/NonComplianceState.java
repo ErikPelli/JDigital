@@ -57,7 +57,7 @@ public class NonComplianceState {
     /**
      * Get date in yyyy-mm-dd format.
      *
-     * @return formatted date string
+     * @return formatted date string or null if there is no date saved.
      */
     public String getFormattedAnalysisDate() {
         return (analysisDate == null) ? null : analysisDate.toString();
@@ -70,7 +70,7 @@ public class NonComplianceState {
     /**
      * Get date in yyyy-mm-dd format.
      *
-     * @return formatted date string
+     * @return formatted date string or null if there is no date saved.
      */
     public String getFormattedCheckDate() {
         return (checkDate == null) ? null : checkDate.toString();
