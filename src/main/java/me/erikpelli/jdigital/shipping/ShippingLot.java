@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import me.erikpelli.jdigital.company.Company;
 
 import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -77,27 +75,17 @@ public class ShippingLot {
      * @return date in format YYYY-MM-DD (e.g. 2023-01-31)
      */
     public String getShippingDate() {
-        var dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return dateFormat.format(shippingDate);
+        return shippingDate.toString();
     }
 
     /**
-     * Set date from format YYYY-MM-DD. Set null if the String is null.
+     * Set date from format YYYY-MM-DD.
      *
      * @param shippingDate formatted date string
-     * @throws ParseException if format is invalid
+     * @throws IllegalArgumentException if format is invalid
      */
-    public void setShippingDate(String shippingDate) throws ParseException {
-        var dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        this.shippingDate = new Date(dateFormat.parse(shippingDate).getTime());
-    }
-
-    public Company getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Company customer) {
-        this.customer = customer;
+    public void setShippingDate(String shippingDate) {
+        this.shippingDate = Date.valueOf(shippingDate);
     }
 
     @Override
