@@ -6,8 +6,9 @@ import me.erikpelli.jdigital.noncompliance.type.NonComplianceType;
 import me.erikpelli.jdigital.noncompliance.type.NonComplianceTypeRepository;
 import me.erikpelli.jdigital.shipping.ShippingLot;
 import me.erikpelli.jdigital.shipping.ShippingRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class NonComplianceRepositoryTest {
     @Autowired
     private NonComplianceRepository nonComplianceRepository;
@@ -36,7 +38,7 @@ class NonComplianceRepositoryTest {
 
     private NonComplianceType nonComplianceType;
 
-    @BeforeEach
+    @BeforeAll
     void setUp() {
         shippingRepository.save(new ShippingLot("shipping1", null, Date.valueOf("2020-10-01")));
         nonComplianceTypeRepository.save(new NonComplianceType("broken part", null));
@@ -48,15 +50,13 @@ class NonComplianceRepositoryTest {
 
     @Test
     void findByCode() {
-        nonComplianceRepository.saveAll(List.of(
-                new NonCompliance(shippingLot, nonComplianceType, NonComplianceOrigin.INTERNAL, null),
-                new NonCompliance(shippingLot, nonComplianceType, NonComplianceOrigin.INTERNAL, null),
-                new NonCompliance(shippingLot, nonComplianceType, NonComplianceOrigin.INTERNAL, null)
-        ));
+        var firstId = nonComplianceRepository.save(new NonCompliance(shippingLot, nonComplianceType, NonComplianceOrigin.INTERNAL, null)).getCode();
+        nonComplianceRepository.save(new NonCompliance(shippingLot, nonComplianceType, NonComplianceOrigin.INTERNAL, null));
+        var lastId = nonComplianceRepository.save(new NonCompliance(shippingLot, nonComplianceType, NonComplianceOrigin.INTERNAL, null)).getCode();
 
-        assertNull(nonComplianceRepository.findByCode(0));
-        assertNotNull(nonComplianceRepository.findByCode(1));
-        assertNull(nonComplianceRepository.findByCode(4));
+        assertNull(nonComplianceRepository.findByCode(firstId - 1));
+        assertNotNull(nonComplianceRepository.findByCode(firstId));
+        assertNull(nonComplianceRepository.findByCode(lastId + 1));
     }
 
     @Test
@@ -116,18 +116,15 @@ class NonComplianceRepositoryTest {
 
     @Test
     void findByOriginAndCode() {
-        var nonCompliances = List.of(
-                new NonCompliance(shippingLot, nonComplianceType, NonComplianceOrigin.INTERNAL, null),
-                new NonCompliance(shippingLot, nonComplianceType, NonComplianceOrigin.CUSTOMER, null),
-                new NonCompliance(shippingLot, nonComplianceType, NonComplianceOrigin.SUPPLIER, null)
-        );
-        nonComplianceRepository.saveAll(nonCompliances);
+        var firstId = nonComplianceRepository.save(new NonCompliance(shippingLot, nonComplianceType, NonComplianceOrigin.INTERNAL, null)).getCode();
+        var secondObj = nonComplianceRepository.save(new NonCompliance(shippingLot, nonComplianceType, NonComplianceOrigin.CUSTOMER, null));
+        nonComplianceRepository.save(new NonCompliance(shippingLot, nonComplianceType, NonComplianceOrigin.INTERNAL, null));
 
-        var second = nonComplianceRepository.findByOriginAndCode(NonComplianceOrigin.CUSTOMER, 2, Pageable.unpaged());
+        var second = nonComplianceRepository.findByOriginAndCode(NonComplianceOrigin.CUSTOMER, secondObj.getCode(), Pageable.unpaged());
         assertEquals(1, second.size());
-        assertEquals(nonCompliances.get(1), second.get(0));
+        assertEquals(secondObj, second.get(0));
 
-        var notFound = nonComplianceRepository.findByOriginAndCode(NonComplianceOrigin.SUPPLIER, 1, Pageable.unpaged());
+        var notFound = nonComplianceRepository.findByOriginAndCode(NonComplianceOrigin.SUPPLIER, firstId, Pageable.unpaged());
         assertEquals(0, notFound.size());
 
         var nullCode = nonComplianceRepository.findByOriginAndCode(NonComplianceOrigin.INTERNAL, null, Pageable.unpaged());
