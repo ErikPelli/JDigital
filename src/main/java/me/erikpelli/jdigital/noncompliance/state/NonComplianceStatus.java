@@ -50,6 +50,15 @@ public enum NonComplianceStatus {
     }
 
     @JsonValue
+    public String publicName() {
+        return switch (value) {
+            case "analysys" -> "progress";
+            case "check" ->  "review";
+            case "result" -> "closed";
+            default -> value;
+        };
+    }
+
     @Override
     public String toString() {
         return value;
