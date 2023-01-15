@@ -10,12 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Date;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 @Service
 public class NonCompliancesService {
@@ -86,43 +84,24 @@ public class NonCompliancesService {
         LocalDate today = testLocalDate != null ? testLocalDate : LocalDate.now();
         // 30th day is today, so we start from 29 days ago
         LocalDate oneMonthAgo = today.minusDays(29);
-        var last30DaysStats = nonComplianceRepository.last30DaysStats(oneMonthAgo, today);
+        var last30DaysStats = new HashMap<>(nonComplianceRepository.last30DaysStats(oneMonthAgo, today));
 
-        // Fill a set with each day of the last month
-        var emptyGeneration = new HashSet<String>(30);
+        // Add zero values in result map where database doesn't provide data
         while (!oneMonthAgo.isAfter(today)) {
-            var formattedDate = oneMonthAgo.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            emptyGeneration.add(formattedDate);
+            last30DaysStats.putIfAbsent(Date.valueOf(oneMonthAgo.toString()), Map.of());
             oneMonthAgo = oneMonthAgo.plusDays(1);
         }
 
-        // Transform the data received from the database
-        // Remove the days that contains a value from the set of empty days
-        var databaseStream = last30DaysStats.entrySet().stream().map(dateMapEntry -> {
-            var formattedDate = dateMapEntry.getKey().toString();
-            emptyGeneration.remove(formattedDate);
-            var statusCounters = dateMapEntry.getValue();
-            return Map.<Object, Object>of(
-                    "date", formattedDate,
-                    NonComplianceStatus.NEW, Optional.ofNullable(statusCounters.get(NonComplianceStatus.NEW)).orElse(0),
-                    NonComplianceStatus.ANALYSIS, Optional.ofNullable(statusCounters.get(NonComplianceStatus.ANALYSIS)).orElse(0),
-                    NonComplianceStatus.CHECK, Optional.ofNullable(statusCounters.get(NonComplianceStatus.CHECK)).orElse(0),
-                    NonComplianceStatus.RESULT, Optional.ofNullable(statusCounters.get(NonComplianceStatus.RESULT)).orElse(0)
-            );
-        });
-
-        // Create a stream with zero values for days that weren't present in the DB result
-        var missingEntriesStream = emptyGeneration.stream().map((String formattedDate) -> Map.<Object, Object>of(
-                "date", formattedDate,
-                NonComplianceStatus.NEW, 0,
-                NonComplianceStatus.ANALYSIS, 0,
-                NonComplianceStatus.CHECK, 0,
-                NonComplianceStatus.RESULT, 0
-        ));
-
-        // Merge the two streams and sort by date with most recent first
-        return Stream.of(databaseStream, missingEntriesStream)
-                .flatMap(Function.identity())
+        return last30DaysStats.entrySet().stream()
+                // Transform data received and set counter to 0 where there is no data
+                .map(dateMapEntry -> Map.<Object, Object>of(
+                        "date", dateMapEntry.getKey().toString(),
+                        NonComplianceStatus.NEW, Optional.ofNullable(dateMapEntry.getValue().get(NonComplianceStatus.NEW)).orElse(0),
+                        NonComplianceStatus.ANALYSIS, Optional.ofNullable(dateMapEntry.getValue().get(NonComplianceStatus.ANALYSIS)).orElse(0),
+                        NonComplianceStatus.CHECK, Optional.ofNullable(dateMapEntry.getValue().get(NonComplianceStatus.CHECK)).orElse(0),
+                        NonComplianceStatus.RESULT, Optional.ofNullable(dateMapEntry.getValue().get(NonComplianceStatus.RESULT)).orElse(0)
+                ))
+                // Return a list sorted by date (most recent first)
                 .sorted(Comparator.comparing((Map<Object, Object> obj) -> ((String) obj.get("date"))).reversed())
                 .toList();
     }
