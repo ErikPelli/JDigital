@@ -62,13 +62,15 @@ public interface NonComplianceRepository extends CrudRepository<NonCompliance, I
     default Map<Date, Map<NonComplianceStatus, Integer>> last30DaysStats(LocalDate oneMonthAgoDate, LocalDate todayDate) {
         return last30DaysStats_rows(oneMonthAgoDate, todayDate).stream().collect(Collectors.toMap(
                 TotalStatsTypeWithDate::getDate,
-                (TotalStatsTypeWithDate) -> new HashMap<>(Map.of(
+                TotalStatsTypeWithDate -> Map.of(
                         TotalStatsTypeWithDate.getStatus(),
                         TotalStatsTypeWithDate.getCounter()
-                )),
+                ),
                 (alreadyPresent, otherMap) -> {
-                    alreadyPresent.putAll(otherMap);
-                    return alreadyPresent;
+                    // Make the Map mutable the first time
+                    var mergedMap = (alreadyPresent.size() == 1) ? new HashMap<>(alreadyPresent) : alreadyPresent;
+                    mergedMap.putAll(otherMap);
+                    return mergedMap;
                 }));
     }
 }
