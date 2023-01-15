@@ -54,7 +54,7 @@ public class NonCompliancesController {
     @PostMapping("/noncompliances")
     public Map<String, Object> returnTotalNumberNonComplianceByStatusAndLast30DaysStats() {
         var totalStats = nonCompliancesService.getNonCompliancesTotalStats();
-        var nonCompliancesPerDayList = nonCompliancesService.getLastMonthStats();
+        var nonCompliancesPerDayList = nonCompliancesService.getLastMonthStats(null);
         return Map.of("totalNonCompliances", totalStats, "days", nonCompliancesPerDayList);
     }
 }

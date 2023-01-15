@@ -108,7 +108,7 @@ class NonCompliancesControllerTest {
                 NonComplianceStatus.CHECK, 18,
                 NonComplianceStatus.RESULT, 54
         ));
-        Mockito.when(nonCompliancesService.getLastMonthStats()).thenReturn(List.of(
+        Mockito.when(nonCompliancesService.getLastMonthStats(Mockito.isNull())).thenReturn(List.of(
                 Map.of(
                         "date", "2022-10-10",
                         NonComplianceStatus.NEW, 2,
