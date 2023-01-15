@@ -47,7 +47,7 @@ class ShippingRepositoryTest {
 
     @Test
     void findByShippingCode() {
-        var shippingLot = new ShippingLot("shipping1", null, null);
+        var shippingLot = new ShippingLot("shipping1", null, Date.valueOf("2022-01-01"));
         shippingRepository.save(shippingLot);
 
         var found = shippingRepository.findByShippingCode("shipping1");
