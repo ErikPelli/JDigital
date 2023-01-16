@@ -1,6 +1,7 @@
 package me.erikpelli.jdigital.noncompliance;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Cause of the noncompliance creation.
@@ -36,6 +37,7 @@ public enum NonComplianceOrigin {
     }
 
     @Override
+    @JsonValue
     public String toString() {
         return value;
     }
