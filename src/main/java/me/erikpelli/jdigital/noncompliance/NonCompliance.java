@@ -16,7 +16,7 @@ public class NonCompliance {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int code;
+    private Integer code;
 
     /**
      * NonCompliance opening date.
@@ -76,11 +76,11 @@ public class NonCompliance {
         this(lot, type, origin, Date.valueOf(LocalDate.now()), comment);
     }
 
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 
