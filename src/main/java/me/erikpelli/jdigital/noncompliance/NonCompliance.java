@@ -105,16 +105,28 @@ public class NonCompliance {
         this.type = type;
     }
 
-    public ShippingLot getLot() {
-        return lot;
-    }
-
     public NonComplianceOrigin getOrigin() {
         return origin;
     }
 
+    public void setOrigin(NonComplianceOrigin origin) {
+        this.origin = origin;
+    }
+
+    public ShippingLot getLot() {
+        return lot;
+    }
+
+    public void setLot(ShippingLot lot) {
+        this.lot = lot;
+    }
+
     public String getComment() {
         return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public NonComplianceState getNonComplianceState() {
