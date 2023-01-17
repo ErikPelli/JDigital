@@ -27,5 +27,7 @@ class CompanyRepositoryTest {
 
         var notFound = companyRepository.findFirstByVatNum("VAT4");
         assertNull(notFound);
+
+        companyRepository.deleteAll();
     }
 }

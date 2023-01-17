@@ -43,6 +43,7 @@ class ShippingRepositoryTest {
         var partialPage = shippingRepository.findAll(PageRequest.of(2, 2, Sort.by("shippingCode")));
         assertEquals(1, partialPage.size());
         assertEquals(lots.subList(4, 5), partialPage);
+        shippingRepository.deleteAll();
     }
 
     @Test
@@ -55,5 +56,6 @@ class ShippingRepositoryTest {
 
         var notFound = shippingRepository.findByShippingCode("shipping2");
         assertNull(notFound);
+        shippingRepository.deleteAll();
     }
 }

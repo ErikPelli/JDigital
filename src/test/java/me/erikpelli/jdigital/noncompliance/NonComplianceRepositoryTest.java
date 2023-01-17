@@ -6,6 +6,7 @@ import me.erikpelli.jdigital.noncompliance.type.NonComplianceType;
 import me.erikpelli.jdigital.noncompliance.type.NonComplianceTypeRepository;
 import me.erikpelli.jdigital.shipping.ShippingLot;
 import me.erikpelli.jdigital.shipping.ShippingRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -46,6 +47,13 @@ class NonComplianceRepositoryTest {
 
         nonComplianceType = nonComplianceTypeRepository.findById(1).orElse(null);
         assertNotNull(nonComplianceType);
+    }
+
+    @AfterAll
+    void cleanUp() {
+        nonComplianceRepository.deleteAll();
+        shippingRepository.deleteAll();
+        nonComplianceTypeRepository.deleteAll();
     }
 
     @Test

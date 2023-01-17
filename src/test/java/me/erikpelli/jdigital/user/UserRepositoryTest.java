@@ -30,6 +30,7 @@ class UserRepositoryTest {
         assertEquals(users.get(1), found);
         var notFound = userRepository.findFirstByEmail("4@gmail.com");
         assertNull(notFound);
+        userRepository.deleteAll();
     }
 
     @Test
@@ -42,5 +43,6 @@ class UserRepositoryTest {
         var allEmails = userRepository.getAllEmails();
         assertEquals(emails.size(), allEmails.size());
         assertEquals(Set.copyOf(emails), Set.copyOf(allEmails));
+        userRepository.deleteAll();
     }
 }

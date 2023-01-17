@@ -31,5 +31,7 @@ class NonComplianceTypeRepositoryTest {
 
         assertEquals(allTypes.get(0).getCode() + 1, allTypes.get(1).getCode());
         assertEquals(allTypes.get(1).getCode() + 1, allTypes.get(2).getCode());
+
+        nonComplianceTypeRepository.deleteAll();
     }
 }
