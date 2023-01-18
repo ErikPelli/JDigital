@@ -42,11 +42,10 @@ class NonComplianceRepositoryTest {
     @BeforeAll
     void setUp() {
         shippingRepository.save(new ShippingLot("shipping1", null, Date.valueOf("2020-10-01")));
-        nonComplianceTypeRepository.save(new NonComplianceType("broken part", null));
+        nonComplianceType = nonComplianceTypeRepository.save(new NonComplianceType("broken part", null));
         shippingLot = shippingRepository.findByShippingCode("shipping1");
-
-        nonComplianceType = nonComplianceTypeRepository.findById(1).orElse(null);
         assertNotNull(nonComplianceType);
+        assertNotNull(shippingLot);
     }
 
     @AfterAll
