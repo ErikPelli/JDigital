@@ -52,7 +52,7 @@ public class NonComplianceService {
         );
         var withOptionalOutput = new HashMap<String, Object>(mandatoryMap);
 
-        if (!foundNonCompliance.getComment().equals("")) {
+        if (foundNonCompliance.getComment() != null) {
             withOptionalOutput.put("comment", foundNonCompliance.getComment());
         }
         if (foundNonCompliance.getNonComplianceState().getResultDescription() != null) {

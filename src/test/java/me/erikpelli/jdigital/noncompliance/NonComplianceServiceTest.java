@@ -110,7 +110,7 @@ class NonComplianceServiceTest {
         nc1.setType(nonComplianceTypeRepository.findById(1).get());
         nc1.setDate(Date.valueOf("2020-09-17"));
         nc1.setLot(shippingRepository.findByShippingCode("shipping1"));
-        nc1.setComment("");
+        nc1.setComment(null);
         nc1.setNonComplianceState(new NonComplianceState(NonComplianceStatus.NEW));
         nonComplianceRepository.save(nc1);
 
@@ -141,7 +141,7 @@ class NonComplianceServiceTest {
         nc2.setType(nonComplianceTypeRepository.findById(1).get());
         nc2.setDate(Date.valueOf("2008-04-01"));
         nc2.setLot(shippingRepository.findByShippingCode("shipping1"));
-        nc2.setComment("");
+        nc2.setComment(null);
         nc2.setNonComplianceState(new NonComplianceState(NonComplianceStatus.RESULT, Date.valueOf("0001-10-09"), Date.valueOf("2002-01-08"), null, null));
         nonComplianceRepository.save(nc2);
 
@@ -159,6 +159,7 @@ class NonComplianceServiceTest {
         nc2.getNonComplianceState().setManager(userRepository.findById("1234567890123456").get());
         nc2.getNonComplianceState().setAnalysisDate(null);
         nc2.getNonComplianceState().setCheckDate(null);
+        nc2.setComment("");
         nonComplianceRepository.save(nc2);
 
         var result4 = assertDoesNotThrow(() -> nonComplianceService.getNonComplianceInfo(2));
@@ -167,7 +168,8 @@ class NonComplianceServiceTest {
                 "nonComplianceType", 1,
                 "nonComplianceDate", "2008-04-01",
                 "shippingLot", "shipping1",
-                "managerEmail", "user@gmail.com"
+                "managerEmail", "user@gmail.com",
+                "comment", ""
         ), result4);
     }
 
