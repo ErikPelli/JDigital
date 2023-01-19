@@ -15,13 +15,11 @@ public class UserSettings {
     /**
      * Job of the user (ceo, manager, employee, ecc.)
      */
-    @Column(nullable = false)
     private String job;
 
     /**
      * Role of the user inside the company (developer, accountant, ecc.)
      */
-    @Column(nullable = false)
     private String role;
 
     protected UserSettings() {
