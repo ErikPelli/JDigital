@@ -30,7 +30,7 @@ public class TicketsService {
      */
     public List<Ticket> getTickets(int resultsPerPage, int pageNumber) {
         if (resultsPerPage > 0 && pageNumber > 0) {
-            var pagination = PageRequest.of(pageNumber, resultsPerPage, Sort.by("nonCompliance.date", "nonCompliance.code").descending());
+            var pagination = PageRequest.of(pageNumber - 1, resultsPerPage, Sort.by("nonCompliance.date", "nonCompliance.code").descending());
             return ticketRepository.findAll(pagination);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid pagination parameters");

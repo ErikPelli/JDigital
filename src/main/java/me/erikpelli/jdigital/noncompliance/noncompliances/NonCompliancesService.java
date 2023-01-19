@@ -36,7 +36,7 @@ public class NonCompliancesService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid pagination parameters");
         }
 
-        var pagination = PageRequest.of(pageNumber, resultsPerPage, Sort.by("date", "code").descending());
+        var pagination = PageRequest.of(pageNumber - 1, resultsPerPage, Sort.by("date", "code").descending());
         if (search == null) {
             return nonComplianceRepository.findAll(pagination);
         }
