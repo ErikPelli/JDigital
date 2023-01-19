@@ -18,10 +18,14 @@ services:
       MYSQL_ONETIME_PASSWORD: yes
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
 
   api:
     build: .
-    hostname: localhost
+    hostname: spring-api
     networks:
       - database_network
       - backend_network
@@ -34,7 +38,8 @@ services:
       - MYSQL_USER
       - MYSQL_PASSWORD
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   frontend:
     build: ./frontend
