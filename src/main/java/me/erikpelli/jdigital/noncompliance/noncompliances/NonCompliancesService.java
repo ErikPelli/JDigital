@@ -37,7 +37,7 @@ public class NonCompliancesService {
         }
 
         var pagination = PageRequest.of(pageNumber - 1, resultsPerPage, Sort.by("date", "code").descending());
-        if (search == null) {
+        if (search == null  || search.equals("")) {
             return nonComplianceRepository.findAll(pagination);
         }
 
